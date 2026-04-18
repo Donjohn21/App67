@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/auth/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,12 +31,19 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
     try {
       await AuthService.login(_matriculaCtrl.text.trim(), _passCtrl.text);
-      if (mounted) context.go('/home');
+      if (mounted) {
+        // Seteamos el estado directamente en el provider para que la UI se actualice inmediatamente
+        // AuthService ya guardó el token en LocalStorage, así que aquí solo actualizamos el estado reactivo.
+        context.read<AuthProvider>().setLoggedIn(true);
+        context.go('/home');
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceAll('Exception: ', '')),
-              backgroundColor: AppTheme.error),
+          SnackBar(
+            content: Text(e.toString().replaceAll('Exception: ', '')),
+            backgroundColor: AppTheme.error,
+          ),
         );
       }
     } finally {
@@ -60,19 +69,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: AppTheme.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Icon(Icons.directions_car,
-                      color: Colors.white, size: 48),
+                  child: const Icon(
+                    Icons.directions_car,
+                    color: Colors.white,
+                    size: 48,
+                  ),
                 ),
                 const SizedBox(height: 24),
-                const Text('Bienvenido',
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary)),
+                const Text(
+                  'Bienvenido',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                const Text('Inicia sesión para continuar',
-                    style:
-                        TextStyle(fontSize: 15, color: AppTheme.textSecondary)),
+                const Text(
+                  'Inicia sesión para continuar',
+                  style: TextStyle(fontSize: 15, color: AppTheme.textSecondary),
+                ),
                 const SizedBox(height: 40),
                 TextFormField(
                   controller: _matriculaCtrl,
@@ -93,13 +109,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                          _obscure ? Icons.visibility_off : Icons.visibility),
+                        _obscure ? Icons.visibility_off : Icons.visibility,
+                      ),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                   ),
-                  validator: (v) => v == null || v.isEmpty
-                      ? 'Ingresa tu contraseña'
-                      : null,
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Ingresa tu contraseña' : null,
                 ),
                 const SizedBox(height: 8),
                 Align(
@@ -114,8 +130,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                         onPressed: _login,
-                        child: const Text('Iniciar Sesión',
-                            style: TextStyle(fontSize: 16)),
+                        child: const Text(
+                          'Iniciar Sesión',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                 const SizedBox(height: 16),
                 Row(
