@@ -92,8 +92,8 @@ flutter run
 
 - Nombre completo - Matrícula  
 - Nombre completo - Matrícula  
-- Nombre completo - Matrícula  
-- Nombre completo - Matrícula  
+- Angel Isaac Mejia Martinez - (2024-1176)  
+- Jayslen Rojas Serrano - (2023-1887)  
 
 ---
 
