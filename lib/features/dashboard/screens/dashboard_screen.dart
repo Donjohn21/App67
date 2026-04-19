@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/storage/local_storage.dart';
+import '../../../core/auth/auth_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,24 +15,26 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentSlide = 0;
-  bool _isLoggedIn = false;
 
   final List<_SlideItem> _slides = [
     _SlideItem(
       title: 'Gestiona tus Vehículos',
-      subtitle: 'Registra y da seguimiento a todos tus vehículos en un solo lugar.',
+      subtitle:
+          'Registra y da seguimiento a todos tus vehículos en un solo lugar.',
       icon: Icons.directions_car,
       gradient: [const Color(0xFF1565C0), const Color(0xFF1976D2)],
     ),
     _SlideItem(
       title: 'Control de Mantenimiento',
-      subtitle: 'Nunca pierdas el historial de mantenimientos de tus vehículos.',
+      subtitle:
+          'Nunca pierdas el historial de mantenimientos de tus vehículos.',
       icon: Icons.build_outlined,
       gradient: [const Color(0xFF00695C), const Color(0xFF00897B)],
     ),
     _SlideItem(
       title: 'Monitorea tus Gastos',
-      subtitle: 'Lleva un registro detallado de gastos, ingresos y combustible.',
+      subtitle:
+          'Lleva un registro detallado de gastos, ingresos y combustible.',
       icon: Icons.account_balance_wallet_outlined,
       gradient: [const Color(0xFF6A1B9A), const Color(0xFF8E24AA)],
     ),
@@ -54,12 +57,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLogin();
-  }
-
-  Future<void> _checkLogin() async {
-    final loggedIn = await LocalStorage.isLoggedIn();
-    if (mounted) setState(() => _isLoggedIn = loggedIn);
+    // AuthProvider realiza la comprobación inicial del estado de sesión.
+    // No necesitamos hacer una comprobación local aquí.
   }
 
   String get _currentMessage {
@@ -73,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('VehicleManager'),
         actions: [
-          if (_isLoggedIn)
+          if (context.watch<AuthProvider>().isLoggedIn)
             IconButton(
               icon: const Icon(Icons.person_outline),
               onPressed: () => context.push('/profile'),
@@ -81,8 +80,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           else
             TextButton(
               onPressed: () => context.push('/login'),
-              child: const Text('Iniciar Sesión',
-                  style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'Iniciar Sesión',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
         ],
       ),
@@ -94,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             _buildMotivationalBanner(),
             const SizedBox(height: 16),
             _buildPublicModules(),
-            if (_isLoggedIn) ...[
+            if (context.watch<AuthProvider>().isLoggedIn) ...[
               const SizedBox(height: 8),
               _buildPrivateModules(),
             ] else ...[
@@ -152,15 +153,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Icon(slide.icon, size: 48, color: Colors.white.withOpacity(0.9)),
           const SizedBox(height: 12),
-          Text(slide.title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold)),
+          Text(
+            slide.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(slide.subtitle,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.85), fontSize: 14)),
+          Text(
+            slide.subtitle,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.85),
+              fontSize: 14,
+            ),
+          ),
         ],
       ),
     );
@@ -173,19 +181,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
       decoration: BoxDecoration(
         color: AppTheme.primary.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: AppTheme.primary.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.3)),
       ),
       child: Row(
         children: [
           const Icon(Icons.format_quote, color: AppTheme.primary, size: 28),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(_currentMessage,
-                style: const TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: AppTheme.textPrimary,
-                    fontSize: 14)),
+            child: Text(
+              _currentMessage,
+              style: const TextStyle(
+                fontStyle: FontStyle.italic,
+                color: AppTheme.textPrimary,
+                fontSize: 14,
+              ),
+            ),
           ),
         ],
       ),
@@ -198,11 +208,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         const Padding(
           padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Text('Explorar',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary)),
+          child: Text(
+            'Explorar',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+          ),
         ),
         GridView.count(
           shrinkWrap: true,
@@ -214,30 +227,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
           childAspectRatio: 0.9,
           children: [
             _ModuleCard(
-                icon: Icons.newspaper_outlined,
-                label: 'Noticias',
-                color: const Color(0xFF1565C0),
-                onTap: () => context.push('/news')),
+              icon: Icons.newspaper_outlined,
+              label: 'Noticias',
+              color: const Color(0xFF1565C0),
+              onTap: () => context.push('/news'),
+            ),
             _ModuleCard(
-                icon: Icons.play_circle_outline,
-                label: 'Videos',
-                color: const Color(0xFFD32F2F),
-                onTap: () => context.push('/videos')),
+              icon: Icons.play_circle_outline,
+              label: 'Videos',
+              color: const Color(0xFFD32F2F),
+              onTap: () => context.push('/videos'),
+            ),
             _ModuleCard(
-                icon: Icons.car_rental,
-                label: 'Catálogo',
-                color: const Color(0xFF2E7D32),
-                onTap: () => context.push('/catalog')),
+              icon: Icons.car_rental,
+              label: 'Catálogo',
+              color: const Color(0xFF2E7D32),
+              onTap: () => context.push('/catalog'),
+            ),
             _ModuleCard(
-                icon: Icons.forum_outlined,
-                label: 'Foro',
-                color: const Color(0xFF6A1B9A),
-                onTap: () => context.push('/public-forum')),
+              icon: Icons.forum_outlined,
+              label: 'Foro',
+              color: const Color(0xFF6A1B9A),
+              onTap: () => context.push('/public-forum'),
+            ),
             _ModuleCard(
-                icon: Icons.info_outline,
-                label: 'Acerca de',
-                color: const Color(0xFFE65100),
-                onTap: () => context.push('/about')),
+              icon: Icons.info_outline,
+              label: 'Acerca de',
+              color: const Color(0xFFE65100),
+              onTap: () => context.push('/about'),
+            ),
           ],
         ),
       ],
@@ -250,11 +268,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         const Padding(
           padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: Text('Mi Área',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary)),
+          child: Text(
+            'Mi Área',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+          ),
         ),
         GridView.count(
           shrinkWrap: true,
@@ -266,35 +287,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
           childAspectRatio: 0.9,
           children: [
             _ModuleCard(
-                icon: Icons.directions_car,
-                label: 'Vehículos',
-                color: const Color(0xFF1565C0),
-                onTap: () => context.push('/vehicles')),
+              icon: Icons.directions_car,
+              label: 'Vehículos',
+              color: const Color(0xFF1565C0),
+              onTap: () => context.push('/vehicles'),
+            ),
             _ModuleCard(
-                icon: Icons.build_outlined,
-                label: 'Mantenimiento',
-                color: const Color(0xFF00695C),
-                onTap: () => context.push('/vehicles')),
+              icon: Icons.build_outlined,
+              label: 'Mantenimiento',
+              color: const Color(0xFF00695C),
+              onTap: () => context.push('/vehicles'),
+            ),
             _ModuleCard(
-                icon: Icons.local_gas_station_outlined,
-                label: 'Combustible',
-                color: const Color(0xFF4527A0),
-                onTap: () => context.push('/vehicles')),
+              icon: Icons.local_gas_station_outlined,
+              label: 'Combustible',
+              color: const Color(0xFF4527A0),
+              onTap: () => context.push('/vehicles'),
+            ),
             _ModuleCard(
-                icon: Icons.tire_repair_outlined,
-                label: 'Gomas',
-                color: const Color(0xFF37474F),
-                onTap: () => context.push('/vehicles')),
+              icon: Icons.tire_repair_outlined,
+              label: 'Gomas',
+              color: const Color(0xFF37474F),
+              onTap: () => context.push('/vehicles'),
+            ),
             _ModuleCard(
-                icon: Icons.account_balance_wallet_outlined,
-                label: 'Gastos',
-                color: const Color(0xFF6A1B9A),
-                onTap: () => context.push('/vehicles')),
+              icon: Icons.account_balance_wallet_outlined,
+              label: 'Gastos',
+              color: const Color(0xFF6A1B9A),
+              onTap: () => context.push('/vehicles'),
+            ),
             _ModuleCard(
-                icon: Icons.chat_bubble_outline,
-                label: 'Mi Foro',
-                color: const Color(0xFFBF360C),
-                onTap: () => context.push('/forum')),
+              icon: Icons.chat_bubble_outline,
+              label: 'Mi Foro',
+              color: const Color(0xFFBF360C),
+              onTap: () => context.push('/forum'),
+            ),
           ],
         ),
       ],
@@ -317,11 +344,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           const Icon(Icons.lock_open_outlined, color: Colors.white, size: 40),
           const SizedBox(height: 12),
-          const Text('Accede a todas las funciones',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
+          const Text(
+            'Accede a todas las funciones',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 8),
           const Text(
             'Registra tus vehículos, controla gastos y participa en el foro.',
@@ -366,11 +396,12 @@ class _SlideItem {
   final IconData icon;
   final List<Color> gradient;
 
-  _SlideItem(
-      {required this.title,
-      required this.subtitle,
-      required this.icon,
-      required this.gradient});
+  _SlideItem({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.gradient,
+  });
 }
 
 class _ModuleCard extends StatelessWidget {
@@ -379,11 +410,12 @@ class _ModuleCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ModuleCard(
-      {required this.icon,
-      required this.label,
-      required this.color,
-      required this.onTap});
+  const _ModuleCard({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -408,12 +440,15 @@ class _ModuleCard extends StatelessWidget {
               child: Icon(icon, color: color, size: 28),
             ),
             const SizedBox(height: 8),
-            Text(label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: color)),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
           ],
         ),
       ),

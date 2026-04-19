@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'routes/app_router.dart';
+import 'core/auth/auth_provider.dart';
 
 void main() {
-  runApp(const App67App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AuthProvider()
+        ..enableDebug = true
+        ..check(),
+      child: const App67App(),
+    ),
+  );
 }
 
 class App67App extends StatelessWidget {
