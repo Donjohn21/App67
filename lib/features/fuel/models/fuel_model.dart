@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class FuelRecord {
   final int id;
   final String tipo;
@@ -17,12 +19,13 @@ class FuelRecord {
 
   factory FuelRecord.fromJson(Map<String, dynamic> json) {
     return FuelRecord(
-      id: json['id'] ?? 0,
-      tipo: json['tipo'] ?? '',
-      cantidad: (json['cantidad'] ?? 0).toDouble(),
-      unidad: json['unidad'] ?? '',
-      monto: (json['monto'] ?? 0).toDouble(),
-      fecha: json['fecha'] ?? '',
+      id: ParseUtils.toIntSafe(json['id']),
+      tipo: json['tipo']?.toString() ?? '',
+      // cantidad / monto may arrive as String from the API
+      cantidad: ParseUtils.toDoubleSafe(json['cantidad']),
+      unidad: json['unidad']?.toString() ?? '',
+      monto: ParseUtils.toDoubleSafe(json['monto']),
+      fecha: json['fecha']?.toString() ?? '',
     );
   }
 }

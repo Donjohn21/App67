@@ -3,6 +3,7 @@ import '../models/fuel_model.dart';
 import '../services/fuel_service.dart';
 import '../../../core/widgets/app_widgets.dart';
 import '../../../core/utils/date_utils.dart';
+import '../../../core/utils/parse_utils.dart';
 import '../../../core/theme/app_theme.dart';
 
 class FuelScreen extends StatefulWidget {
@@ -61,9 +62,15 @@ class _FuelScreenState extends State<FuelScreen>
             children: [
               TextFormField(
                 controller: cantCtrl,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: 'Cantidad'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Campo requerido';
+                  if (ParseUtils.tryParseMontoInput(v) == null) {
+                    return 'Ingresa un número válido';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
@@ -77,9 +84,15 @@ class _FuelScreenState extends State<FuelScreen>
               const SizedBox(height: 12),
               TextFormField(
                 controller: montoCtrl,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: 'Monto (RD\$)'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Campo requerido';
+                  if (ParseUtils.tryParseMontoInput(v) == null) {
+                    return 'Ingresa un monto válido';
+                  }
+                  return null;
+                },
               ),
             ],
           ),
@@ -94,9 +107,10 @@ class _FuelScreenState extends State<FuelScreen>
                 await FuelService.create(
                   vehiculoId: widget.vehicleId,
                   tipo: tipo,
-                  cantidad: double.parse(cantCtrl.text.replaceAll(',', '.')),
+                  // Validator already confirmed these are valid numbers
+                  cantidad: ParseUtils.parseMontoInput(cantCtrl.text),
                   unidad: unidad,
-                  monto: double.parse(montoCtrl.text.replaceAll(',', '.')),
+                  monto: ParseUtils.parseMontoInput(montoCtrl.text),
                 );
                 _load();
               } catch (e) {

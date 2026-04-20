@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class ExpenseCategory {
   final int id;
   final String nombre;
@@ -5,7 +7,10 @@ class ExpenseCategory {
   ExpenseCategory({required this.id, required this.nombre});
 
   factory ExpenseCategory.fromJson(Map<String, dynamic> json) {
-    return ExpenseCategory(id: json['id'] ?? 0, nombre: json['nombre'] ?? '');
+    return ExpenseCategory(
+      id: ParseUtils.toIntSafe(json['id']),
+      nombre: json['nombre']?.toString() ?? '',
+    );
   }
 }
 
@@ -28,12 +33,17 @@ class Expense {
 
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
-      id: json['id'] ?? 0,
-      categoriaId: json['categoriaId'] ?? json['categoria_id'] ?? 0,
-      categoriaNombre: json['categoriaNombre'] ?? json['categoria'] ?? '',
-      monto: (json['monto'] ?? 0).toDouble(),
-      descripcion: json['descripcion'],
-      fecha: json['fecha'] ?? '',
+      id: ParseUtils.toIntSafe(json['id']),
+      categoriaId: ParseUtils.toIntSafe(
+          json['categoriaId'] ?? json['categoria_id']),
+      categoriaNombre:
+          json['categoriaNombre']?.toString() ??
+          json['categoria']?.toString() ??
+          '',
+      // monto may arrive as String from the API
+      monto: ParseUtils.toDoubleSafe(json['monto']),
+      descripcion: json['descripcion']?.toString(),
+      fecha: json['fecha']?.toString() ?? '',
     );
   }
 }
@@ -53,10 +63,11 @@ class Income {
 
   factory Income.fromJson(Map<String, dynamic> json) {
     return Income(
-      id: json['id'] ?? 0,
-      monto: (json['monto'] ?? 0).toDouble(),
-      concepto: json['concepto'] ?? '',
-      fecha: json['fecha'] ?? '',
+      id: ParseUtils.toIntSafe(json['id']),
+      // monto may arrive as String from the API
+      monto: ParseUtils.toDoubleSafe(json['monto']),
+      concepto: json['concepto']?.toString() ?? '',
+      fecha: json['fecha']?.toString() ?? '',
     );
   }
 }

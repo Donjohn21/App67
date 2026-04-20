@@ -3,6 +3,7 @@ import '../models/expense_model.dart';
 import '../services/expense_service.dart';
 import '../../../core/widgets/app_widgets.dart';
 import '../../../core/utils/date_utils.dart';
+import '../../../core/utils/parse_utils.dart';
 import '../../../core/theme/app_theme.dart';
 
 class ExpensesScreen extends StatefulWidget {
@@ -72,15 +73,22 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               const SizedBox(height: 12),
               TextFormField(
                 controller: montoCtrl,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: 'Monto (RD\$)'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Campo requerido';
+                  if (ParseUtils.tryParseMontoInput(v) == null) {
+                    return 'Ingresa un monto válido';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: descCtrl,
                 decoration: const InputDecoration(labelText: 'Descripción'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) =>
+                    v == null || v.trim().isEmpty ? 'Campo requerido' : null,
               ),
             ],
           ),
@@ -95,7 +103,8 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                 await ExpenseService.createExpense(
                   vehiculoId: widget.vehicleId,
                   categoriaId: catId,
-                  monto: double.parse(montoCtrl.text.replaceAll(',', '.')),
+                  // Validator already confirmed this is a valid number
+                  monto: ParseUtils.parseMontoInput(montoCtrl.text),
                   descripcion: descCtrl.text.trim(),
                 );
                 _load();
@@ -127,15 +136,22 @@ class _ExpensesScreenState extends State<ExpensesScreen>
             children: [
               TextFormField(
                 controller: montoCtrl,
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: 'Monto (RD\$)'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Campo requerido';
+                  if (ParseUtils.tryParseMontoInput(v) == null) {
+                    return 'Ingresa un monto válido';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: conceptoCtrl,
                 decoration: const InputDecoration(labelText: 'Concepto'),
-                validator: (v) => v == null || v.isEmpty ? 'Requerido' : null,
+                validator: (v) =>
+                    v == null || v.trim().isEmpty ? 'Campo requerido' : null,
               ),
             ],
           ),
@@ -149,7 +165,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               try {
                 await ExpenseService.createIncome(
                   vehiculoId: widget.vehicleId,
-                  monto: double.parse(montoCtrl.text.replaceAll(',', '.')),
+                  monto: ParseUtils.parseMontoInput(montoCtrl.text),
                   concepto: conceptoCtrl.text.trim(),
                 );
                 _load();

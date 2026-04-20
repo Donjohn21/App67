@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class CatalogItem {
   final int id;
   final String marca;
@@ -25,16 +27,19 @@ class CatalogItem {
 
   factory CatalogItem.fromJson(Map<String, dynamic> json) {
     return CatalogItem(
-      id: json['id'] ?? 0,
-      marca: json['marca'] ?? '',
-      modelo: json['modelo'] ?? '',
-      anio: json['anio'] ?? 0,
-      precio: (json['precio'] ?? 0).toDouble(),
-      imagen: json['imagen'],
-      descripcionCorta: json['descripcionCorta'] ?? json['descripcion_corta'],
-      descripcion: json['descripcion'],
-      imagenes: (json['imagenes'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      especificaciones: json['especificaciones'],
+      id: ParseUtils.toIntSafe(json['id']),
+      marca: json['marca']?.toString() ?? '',
+      modelo: json['modelo']?.toString() ?? '',
+      anio: ParseUtils.toIntSafe(json['anio']),
+      // precio may arrive as String
+      precio: ParseUtils.toDoubleSafe(json['precio']),
+      imagen: json['imagen']?.toString(),
+      descripcionCorta: json['descripcionCorta']?.toString() ??
+          json['descripcion_corta']?.toString(),
+      descripcion: json['descripcion']?.toString(),
+      imagenes:
+          (json['imagenes'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      especificaciones: json['especificaciones'] as Map<String, dynamic>?,
     );
   }
 }

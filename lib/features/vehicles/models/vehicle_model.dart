@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class Vehicle {
   final int id;
   final String placa;
@@ -37,21 +39,30 @@ class Vehicle {
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     final fin = json['resumenFinanciero'] as Map<String, dynamic>?;
     return Vehicle(
-      id: json['id'] ?? 0,
-      placa: json['placa'] ?? '',
-      chasis: json['chasis'] ?? '',
-      marca: json['marca'] ?? '',
-      modelo: json['modelo'] ?? '',
-      anio: json['anio'] ?? 0,
-      cantidadRuedas: json['cantidadRuedas'] ?? 4,
-      foto: json['foto'],
-      fecha: json['fecha'],
-      totalMantenimientos: (fin?['totalMantenimientos'] ?? 0).toDouble(),
-      totalCombustible: (fin?['totalCombustible'] ?? 0).toDouble(),
-      totalGastos: (fin?['totalGastos'] ?? 0).toDouble(),
-      totalIngresos: (fin?['totalIngresos'] ?? 0).toDouble(),
-      inversion: (fin?['inversion'] ?? 0).toDouble(),
-      balance: (fin?['balance'] ?? 0).toDouble(),
+      id: ParseUtils.toIntSafe(json['id']),
+      placa: json['placa']?.toString() ?? '',
+      chasis: json['chasis']?.toString() ?? '',
+      marca: json['marca']?.toString() ?? '',
+      modelo: json['modelo']?.toString() ?? '',
+      // anio / cantidadRuedas may arrive as String
+      anio: ParseUtils.toIntSafe(json['anio']),
+      cantidadRuedas: ParseUtils.toIntSafe(json['cantidadRuedas'],
+          fallback: 4),
+      foto: json['foto']?.toString(),
+      fecha: json['fecha']?.toString(),
+      // Financial fields may be String, int, double, or absent
+      totalMantenimientos:
+          fin != null ? ParseUtils.toDoubleSafe(fin['totalMantenimientos']) : null,
+      totalCombustible:
+          fin != null ? ParseUtils.toDoubleSafe(fin['totalCombustible']) : null,
+      totalGastos:
+          fin != null ? ParseUtils.toDoubleSafe(fin['totalGastos']) : null,
+      totalIngresos:
+          fin != null ? ParseUtils.toDoubleSafe(fin['totalIngresos']) : null,
+      inversion:
+          fin != null ? ParseUtils.toDoubleSafe(fin['inversion']) : null,
+      balance:
+          fin != null ? ParseUtils.toDoubleSafe(fin['balance']) : null,
     );
   }
 

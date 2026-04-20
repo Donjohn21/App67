@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class TireInfo {
   final int cantidadRuedas;
   final List<Tire> gomas;
@@ -6,9 +8,11 @@ class TireInfo {
 
   factory TireInfo.fromJson(Map<String, dynamic> json) {
     return TireInfo(
-      cantidadRuedas: json['cantidadRuedas'] ?? 4,
+      // cantidadRuedas may come as String ("4") instead of int
+      cantidadRuedas: ParseUtils.toIntSafe(json['cantidadRuedas'],
+          fallback: 4),
       gomas: (json['gomas'] as List?)
-              ?.map((e) => Tire.fromJson(e))
+              ?.map((e) => Tire.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -32,11 +36,12 @@ class Tire {
 
   factory Tire.fromJson(Map<String, dynamic> json) {
     return Tire(
-      id: json['id'] ?? 0,
-      posicion: json['posicion'] ?? '',
-      eje: json['eje'] ?? '',
-      estado: json['estado'] ?? 'buena',
-      totalPinchazos: json['totalPinchazos'] ?? 0,
+      // id / totalPinchazos may come as String ("1") instead of int
+      id: ParseUtils.toIntSafe(json['id']),
+      posicion: json['posicion']?.toString() ?? '',
+      eje: json['eje']?.toString() ?? '',
+      estado: json['estado']?.toString() ?? 'buena',
+      totalPinchazos: ParseUtils.toIntSafe(json['totalPinchazos']),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../services/maintenance_service.dart';
+import '../../../core/utils/parse_utils.dart';
 import '../../../core/theme/app_theme.dart';
 
 class MaintenanceFormScreen extends StatefulWidget {
@@ -59,7 +60,8 @@ class _MaintenanceFormScreenState extends State<MaintenanceFormScreen> {
       await MaintenanceService.create(
         vehiculoId: widget.vehicleId,
         tipo: _tipoCtrl.text.trim(),
-        costo: double.parse(_costoCtrl.text.replaceAll(',', '.')),
+        // Validator already confirmed this is a valid number
+        costo: ParseUtils.parseMontoInput(_costoCtrl.text),
         fecha: _fecha.toIso8601String().substring(0, 10),
         piezas: _piezasCtrl.text.trim(),
         fotos: _fotos,
