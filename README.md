@@ -90,7 +90,7 @@ flutter run
 
 ## Integrantes del proyecto
 
-- Randy Alexander Mejia Moscoso - 2020-10307 
+- Randy Alexander Mejia Moscoso - (2020-10307) 
 - Adrian Alexander Reyes - (2023-1100)  
 - Angel Isaac Mejia Martinez - (2024-1176)  
 - Jayslen Rojas Serrano - (2023-1887)
