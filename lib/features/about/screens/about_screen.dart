@@ -6,32 +6,39 @@ class AboutScreen extends StatelessWidget {
 
   static const List<_TeamMember> _team = [
     _TeamMember(
-      nombre: 'Integrante 1',
-      matricula: '20240001',
+      nombre: 'Adrian Alexander Reyes',
+      matricula: '2023-1100',
       telefono: '809-000-0001',
-      telegram: '@integrante1',
-      email: 'integrante1@itla.edu.do',
+      telegram: '@adrianreyes',
+      email: 'areyes@itla.edu.do',
     ),
     _TeamMember(
-      nombre: 'Integrante 2',
-      matricula: '20240002',
+      nombre: 'Angel Isaac Mejia Martinez',
+      matricula: '2024-1176',
       telefono: '809-000-0002',
-      telegram: '@integrante2',
-      email: 'integrante2@itla.edu.do',
+      telegram: '@angelmejia',
+      email: 'amejia@itla.edu.do',
     ),
     _TeamMember(
-      nombre: 'Integrante 3',
-      matricula: '20240003',
+      nombre: 'Jayslen Rojas Serrano',
+      matricula: '2023-1887',
       telefono: '809-000-0003',
-      telegram: '@integrante3',
-      email: 'integrante3@itla.edu.do',
+      telegram: '@jayslenrojas',
+      email: 'jrojas@itla.edu.do',
     ),
     _TeamMember(
       nombre: 'Integrante 4',
-      matricula: '20240004',
+      matricula: '0000-0000',
       telefono: '809-000-0004',
       telegram: '@integrante4',
       email: 'integrante4@itla.edu.do',
+    ),
+    _TeamMember(
+      nombre: 'Integrante 5',
+      matricula: '0000-0000',
+      telefono: '809-000-0005',
+      telegram: '@integrante5',
+      email: 'integrante5@itla.edu.do',
     ),
   ];
 
