@@ -33,7 +33,7 @@ class ForumAuthService {
     required String descripcion,
   }) async {
     final res = await ApiClient.postAuth('/foro/crear', {
-      'vehiculo_id': vehiculoId,
+      'vehiculoId': vehiculoId,
       'titulo': titulo,
       'descripcion': descripcion,
     });
@@ -47,7 +47,7 @@ class ForumAuthService {
     required String contenido,
   }) async {
     final res = await ApiClient.postAuth('/foro/responder', {
-      'tema_id': temaId,
+      'temaId': temaId,
       'contenido': contenido,
     });
     final data = res.data;

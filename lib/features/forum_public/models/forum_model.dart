@@ -1,3 +1,5 @@
+import '../../../core/utils/parse_utils.dart';
+
 class ForumTopic {
   final int id;
   final String titulo;
@@ -23,16 +25,16 @@ class ForumTopic {
 
   factory ForumTopic.fromJson(Map<String, dynamic> json) {
     return ForumTopic(
-      id: json['id'] ?? 0,
-      titulo: json['titulo'] ?? '',
-      descripcion: json['descripcion'] ?? '',
-      fecha: json['fecha'] ?? '',
-      totalRespuestas: json['totalRespuestas'] ?? 0,
-      vehiculo: json['vehiculo'],
-      vehiculoFoto: json['vehiculoFoto'],
-      autor: json['autor'],
+      id: ParseUtils.toIntSafe(json['id']),
+      titulo: json['titulo']?.toString() ?? '',
+      descripcion: json['descripcion']?.toString() ?? '',
+      fecha: json['fecha']?.toString() ?? '',
+      totalRespuestas: ParseUtils.toIntSafe(json['totalRespuestas']),
+      vehiculo: json['vehiculo']?.toString(),
+      vehiculoFoto: json['vehiculoFoto']?.toString(),
+      autor: json['autor']?.toString(),
       respuestas: (json['respuestas'] as List?)
-              ?.map((e) => ForumReply.fromJson(e))
+              ?.map((e) => ForumReply.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -54,10 +56,10 @@ class ForumReply {
 
   factory ForumReply.fromJson(Map<String, dynamic> json) {
     return ForumReply(
-      id: json['id'] ?? 0,
-      contenido: json['contenido'] ?? '',
-      fecha: json['fecha'] ?? '',
-      autor: json['autor'],
+      id: ParseUtils.toIntSafe(json['id']),
+      contenido: json['contenido']?.toString() ?? '',
+      fecha: json['fecha']?.toString() ?? '',
+      autor: json['autor']?.toString(),
     );
   }
 }
