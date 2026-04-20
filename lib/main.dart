@@ -7,9 +7,7 @@ import 'core/auth/auth_provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => AuthProvider()
-        ..enableDebug = true
-        ..check(),
+      create: (_) => AuthProvider()..check(),
       child: const App67App(),
     ),
   );

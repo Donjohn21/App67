@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(slide.icon, size: 48, color: Colors.white.withOpacity(0.9)),
+          Icon(slide.icon, size: 48, color: Colors.white.withValues(alpha: 0.9)),
           const SizedBox(height: 12),
           Text(
             slide.title,
@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             slide.subtitle,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withValues(alpha: 0.85),
               fontSize: 14,
             ),
           ),
@@ -179,9 +179,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.primary.withOpacity(0.08),
+        color: AppTheme.primary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
