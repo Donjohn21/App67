@@ -10,35 +10,40 @@ class AboutScreen extends StatelessWidget {
       matricula: '2023-1100',
       telefono: '809-000-0001',
       telegram: '@adrianreyes',
-      email: 'areyes@itla.edu.do',
+      email: '20231100@itla.edu.do',
+      foto: "https://i.postimg.cc/k4kttnv8/Jonh-aquino.jpg"
     ),
     _TeamMember(
       nombre: 'Angel Isaac Mejia Martinez',
       matricula: '2024-1176',
-      telefono: '809-000-0002',
+      telefono: '849-243-2262',
       telegram: '@angelmejia',
-      email: 'amejia@itla.edu.do',
+      email: '20241176@itla.edu.do',
+      foto: "https://i.postimg.cc/QtRWWXJ1/Sketch.jpg"
     ),
     _TeamMember(
       nombre: 'Jayslen Rojas Serrano',
       matricula: '2023-1887',
-      telefono: '809-000-0003',
+      telefono: '849-212-6926',
       telegram: '@jayslenrojas',
-      email: 'jrojas@itla.edu.do',
+      email: '20231887@itla.edu.do',
+      foto: "https://i.postimg.cc/TwZWWRJr/JR.jpg"
     ),
     _TeamMember(
-      nombre: 'Integrante 4',
-      matricula: '0000-0000',
-      telefono: '809-000-0004',
-      telegram: '@integrante4',
-      email: 'integrante4@itla.edu.do',
+      nombre: 'Randy Alexander Mejia Moscoso',
+      matricula: '2020-10307',
+      telefono: '809-464-9599',
+      telegram: '@randymejia',
+      email: '202010307@itla.edu.do',
+      foto: "https://i.postimg.cc/L8nSB1Xb/Chat-GPT-Image-Feb-23-2026-05-38-23-PM.png"
     ),
     _TeamMember(
-      nombre: 'Integrante 5',
-      matricula: '0000-0000',
-      telefono: '809-000-0005',
-      telegram: '@integrante5',
-      email: 'integrante5@itla.edu.do',
+      nombre: 'John Wilbert Aquino Disla ',
+      matricula: '2022-0417',
+      telefono: '849-359-4359',
+      telegram: '@johnaquino',
+      email: '20220417@itla.edu.do',
+      foto: "https://i.postimg.cc/tTLVVXN1/Isaac.jpg"
     ),
   ];
 
