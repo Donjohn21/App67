@@ -91,7 +91,7 @@ flutter run
 ## Integrantes del proyecto
 
 - Nombre completo - Matrícula  
-- Nombre completo - Matrícula  
+- Adrian Alexander Reyes - (20231100)  
 - Angel Isaac Mejia Martinez - (2024-1176)  
 - Jayslen Rojas Serrano - (2023-1887)  
 
